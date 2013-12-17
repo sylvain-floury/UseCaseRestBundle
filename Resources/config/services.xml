@@ -4,17 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
-    <parameters>
-        <parameter key="flosy_use_case_rest.example.class">Flosy\Bundle\UseCaseRestBundle\Example</parameter>
+   <parameters>
+        <parameter key="flosy.usecase_rest.project.handler.class">Flosy\Bundle\UseCaseRestBundle\Handler\ProjectHandler</parameter>
+        <parameter key="flosy.usecase_rest.project.class">Flosy\Bundle\UseCaseRestBundle\Entity\Project</parameter>
     </parameters>
 
     <services>
-        <service id="flosy_use_case_rest.example" class="%flosy_use_case_rest.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="flosy.usecase_rest.project.handler" class="%flosy.usecase_rest.project.handler.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%flosy.usecase_rest.project.class%</argument>
         </service>
     </services>
-    -->
 </container>
