@@ -1,0 +1,5 @@
+flosy_usecase_rest_project:
+    type: rest
+    prefix: /v1
+    resource: "Flosy\Bundle\UseCaseRestBundle\Controller\\ProjectController"
+    name_prefix:  api_1_ # naming collision
