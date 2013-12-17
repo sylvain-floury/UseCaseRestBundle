@@ -11,3 +11,11 @@ flosy_usecase_rest:
     prefix: /api
     resource: "@FlosyUseCaseRestBundle/Resources/config/routing.yml"
 ```
+
+Dependencies
+------------
+
+```bash
+php composer.phar require "friendsofsymfony/rest-bundle" "@dev"
+php composer.phar require "jms/serializer-bundle" "@dev"
+```
