@@ -2,7 +2,7 @@
 
 namespace Flosy\Bundle\UseCaseRestBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
@@ -10,6 +10,8 @@ use FOS\RestBundle\Controller\Annotations;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+use Flosy\Bundle\UseCaseRestBundle\Model\ProjectInterface;
 
 class ProjectController extends FOSRestController
 {
@@ -36,10 +38,26 @@ class ProjectController extends FOSRestController
     */
     public function getProjectAction($id)
     {
-        $project = $this->container
-        ->get('flosy.usecase_rest.project.handler')
-        ->get($id);
+        $project = $this->getOr404($id);
          
+        return $project;
+    }
+    
+   /**
+    * Fetch a Page or throw an 404 Exception.
+    *
+    * @param int $id
+    *
+    * @return ProjectInterface
+    *
+    * @throws NotFoundHttpException
+    */
+    protected function getOr404($id)
+    {
+        if (!($project = $this->container->get('flosy.usecase_rest.project.handler')->get($id))) {
+            throw new NotFoundHttpException(sprintf('The resource \'%s\' was not found.',$id));
+        }
+
         return $project;
     }
 }
