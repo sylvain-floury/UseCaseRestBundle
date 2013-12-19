@@ -37,6 +37,22 @@ class ProjectHandlerTest extends WebTestCase
         
         $entity = $this->projectHandler->get($project->getId());
     }
+    
+    public function testPost()
+    {
+        $name = 'My handler project';
+        $description = 'my handler project description.';
+
+        $parameters = array('name' => $name, 'description' => $description);
+
+        $project = new Project();
+        $project->setName($name);
+        $project->setDescription($description);
+
+        $projectObject = $this->projectHandler->post($parameters);
+
+        //$this->assertEquals($projectObject, $project);
+    }
 }
 
 ?>

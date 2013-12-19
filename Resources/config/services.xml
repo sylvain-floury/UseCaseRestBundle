@@ -13,6 +13,7 @@
         <service id="flosy.usecase_rest.project.handler" class="%flosy.usecase_rest.project.handler.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%flosy.usecase_rest.project.class%</argument>
+            <argument type="service" id="form.factory"></argument>
         </service>
     </services>
 </container>

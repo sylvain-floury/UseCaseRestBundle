@@ -3,8 +3,10 @@
 namespace Flosy\Bundle\UseCaseRestBundle\Entity;
 
 use Flosy\Bundle\UseCaseRestBundle\Model\ProjectInterface;
+
 use Gedmo\Mapping\Annotation as Gedmo; // gedmo annotations
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Flosy\Bundle\UseCaseBundle\Entity\Project
@@ -27,6 +29,12 @@ class Project implements ProjectInterface
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\NotNull()
+     * @Assert\Length(
+     *      min = "2",
+     *      minMessage = "Your project name must be at least {{ limit }} characters."
+     * )
      */
     private $name;
 
