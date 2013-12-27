@@ -51,7 +51,25 @@ class ProjectHandlerTest extends WebTestCase
 
         $projectObject = $this->projectHandler->post($parameters);
 
-        //$this->assertEquals($projectObject, $project);
+        $this->assertEquals($name, $projectObject->getName());
+        $this->assertEquals($description, $projectObject->getDescription());
+    }
+    
+   /**
+    * @expectedException Flosy\Bundle\UseCaseRestBundle\Exception\InvalidFormException
+    */
+    public function testPostShouldRaiseException()
+    {
+        $name = 'M';
+        $description = 'my handler project description.';
+
+        $parameters = array('name' => $name, 'description' => $description);
+
+        $project = new Project();
+        $project->setName($name);
+        $project->setDescription($description);
+
+        $projectObject = $this->projectHandler->post($parameters);
     }
 }
 
