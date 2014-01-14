@@ -14,19 +14,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Flosy\Bundle\UseCaseRestBundle\Model\ProjectInterface;
 use Flosy\Bundle\UseCaseRestBundle\Exception\InvalidFormException;
+use Flosy\Bundle\UseCaseBundle\Form\ProjectType;
 
 class ProjectController extends FOSRestController
 {
    /**
-    * Get single Page,
+    * Get single Project,
     *
     * #ApiDoc(
     * resource = true,
-    * description = "Gets a Page for a given id",
+    * description = "Gets a Project for a given id",
     * output = "Flosy\Bundle\UseCaseRestBundle\Entity\Project",
     * statusCodes = {
     * 200 = "Returned when successful",
-    * 404 = "Returned when the page is not found"
+    * 404 = "Returned when the project is not found"
     * }
     * )
     *
@@ -50,7 +51,7 @@ class ProjectController extends FOSRestController
     *
     * #ApiDoc(
     *   resource = true,
-    *   description = "Creates a new page from the submitted data.",
+    *   description = "Creates a new project from the submitted data.",
     *   input = "Flosy\Bundle\UseCaseRestBundle\Entity\Project",
     *   statusCodes = {
     *     200 = "Returned when successful",
@@ -86,9 +87,28 @@ class ProjectController extends FOSRestController
           return $exception->getForm();
       }
    }
+   
+   /**
+    * Presents the form to use to create a new project.
+    *
+    * #ApiDoc(
+    *   resource = true,
+    *   statusCodes = {
+    *     200 = "Returned when successful"
+    *   }
+    * )
+    *
+    * @Annotations\View()
+    *
+    * @return FormTypeInterface
+    */
+   public function newProjectAction()
+   {
+       return $this->createForm(new ProjectType());
+   }
     
    /**
-    * Fetch a Page or throw an 404 Exception.
+    * Fetch a Project or throw an 404 Exception.
     *
     * @param int $id
     *
