@@ -1,0 +1,18 @@
+{% block content %}
+    <h1 class="title">{{ 'project.list'|trans({}, 'FlosyUseCaseRestBundle') }}</h1>
+
+    <ul id="project-list">
+        {% for project in projects %}
+            <li>
+                <a href="{{ path('api_1_get_project', {'id': project.id}) }}">{{ project.name }}</a>
+                {#[<a href="{{ path('api_1_edit_projects', {'id': project.id}) }}">{{ 'project.edit.link'|trans({}, 'FlosyUseCaseRestBundle') }}</a>]#}
+                {#[<a href="{{ path('api_1_remove_projects', {'id': project.id}) }}">{{ 'project.remove.link'|trans({}, 'FlosyUseCaseRestBundle') }}</a>]#}
+            </li>
+        {% else %}
+            <li>{{ 'project.list.empty'|trans({}, 'FlosyUseCaseRestBundle') }}</li>
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="{{ path('api_1_new_project') }}">{{ 'project.new.link'|trans({}, 'FlosyUseCaseRestBundle') }}</a>
+    </p>
+{% endblock %}

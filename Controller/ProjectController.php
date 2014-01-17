@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\Annotations;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -186,6 +187,37 @@ class ProjectController extends FOSRestController
             'action' => $this->generateUrl('project_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));*/
+   }
+   
+   /**
+    * List all projects.
+    *
+    * @ApiDoc(
+    *   resource = true,
+    *   statusCodes = {
+    *     200 = "Returned when successful"
+    *   }
+    * )
+    *
+    * @Annotations\QueryParam(name="offset", requirements="\d+", nullable=true, description="Offset from which to start listing projects.")
+    * @Annotations\QueryParam(name="limit", requirements="\d+", default="5", description="How many projects to return.")
+    *
+    * @Annotations\View(
+    *  templateVar="projects"
+    * )
+    *
+    * @param Request               $request      the request object
+    * @param ParamFetcherInterface $paramFetcher param fetcher service
+    *
+    * @return array
+    */
+   public function getProjectsAction(Request $request, ParamFetcherInterface $paramFetcher)
+   {
+       $offset = $paramFetcher->get('offset');
+       $offset = null == $offset ? 0 : $offset;
+       $limit = $paramFetcher->get('limit');
+
+       return $this->container->get('flosy.usecase_rest.project.handler')->all($limit, $offset);
    }
     
    /**

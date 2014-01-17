@@ -47,4 +47,14 @@ interface ProjectHandlerInterface {
     * @return ProjectInterface
     */
    public function patch(ProjectInterface $project, array $parameters);
+   
+   /** 
+    * Get a list of Projects.
+    *
+    * @param int $limit  the limit of the result
+    * @param int $offset starting from the offset
+    *
+    * @return array
+    */
+   public function all($limit = 5, $offset = 0, $orderby = null);
 }
