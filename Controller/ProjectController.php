@@ -183,10 +183,7 @@ class ProjectController extends FOSRestController
    {
        $project = $this->getOr404($id);
        
-       return $this->createForm(new ProjectType(), $project );/*, array(
-            'action' => $this->generateUrl('project_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));*/
+       return $this->createForm(new ProjectType(), $project );
    }
    
    /**
