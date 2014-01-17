@@ -8,20 +8,21 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\Annotations;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Flosy\Bundle\UseCaseRestBundle\Model\ProjectInterface;
 use Flosy\Bundle\UseCaseRestBundle\Exception\InvalidFormException;
-use Flosy\Bundle\UseCaseBundle\Form\ProjectType;
+use Flosy\Bundle\UseCaseRestBundle\Form\ProjectType;
 
 class ProjectController extends FOSRestController
 {
    /**
     * Get single Project,
     *
-    * #ApiDoc(
+    * @ApiDoc(
     * resource = true,
     * description = "Gets a Project for a given id",
     * output = "Flosy\Bundle\UseCaseRestBundle\Entity\Project",
@@ -33,11 +34,11 @@ class ProjectController extends FOSRestController
     *
     * @Annotations\View(templateVar="project")
     *
-    * @param int $id the page id
+    * @param int $id the project id
     *
     * @return array
     *
-    * @throws NotFoundHttpException when page not exist
+    * @throws NotFoundHttpException when project not exist
     */
     public function getProjectAction($id)
     {
@@ -49,7 +50,7 @@ class ProjectController extends FOSRestController
    /**
     * Create a Project from the submitted data.
     *
-    * #ApiDoc(
+    * @ApiDoc(
     *   resource = true,
     *   description = "Creates a new project from the submitted data.",
     *   input = "Flosy\Bundle\UseCaseRestBundle\Entity\Project",
@@ -60,7 +61,7 @@ class ProjectController extends FOSRestController
     * )
     *
     * @Annotations\View(
-    *  template = "FlosyUseCaseRestBundle:Project:newProject.html.twig",
+    *  template = "FlosyUseCaseRestBundle:Project:editProject.html.twig",
     *  statusCode = Codes::HTTP_BAD_REQUEST,
     *  templateVar = "form"
     * )
@@ -89,9 +90,63 @@ class ProjectController extends FOSRestController
    }
    
    /**
+    * Update existing project from the submitted data or create a new project at a specific location.
+    *
+    * @ApiDoc(
+    *   resource = true,
+    *   input = "Flosy\Bundle\UseCaseRestBundle\Form\ProjectType",
+    *   statusCodes = {
+    *     201 = "Returned when the Project is created",
+    *     204 = "Returned when successful",
+    *     400 = "Returned when the form has errors"
+    *   }
+    * )
+    *
+    * @Annotations\View(
+    *  template = "FlosyUseCaseRestBundle:Project:editProject.html.twig",
+    *  templateVar = "form"
+    * )
+    *
+    * @param Request $request the request object
+    * @param int     $id      the project id
+    *
+    * @return FormTypeInterface|View
+    *
+    * @throws NotFoundHttpException when project not exist
+    */
+   public function putProjectAction(Request $request, $id)
+   {
+       try {
+           if (!($project = $this->container->get('flosy.usecase_rest.project.handler')->get($id))) {
+               $statusCode = Codes::HTTP_CREATED;
+               $project = $this->container->get('flosy.usecase_rest.project.handler')->post(
+                   $request->request->all()
+               );
+           } else {
+               $statusCode = Codes::HTTP_NO_CONTENT;
+               $project = $this->container->get('flosy.usecase_rest.project.handler')->put(
+                   $project,
+                   $request->request->all()
+               );
+           }
+
+           $routeOptions = array(
+               'id' => $project->getId(),
+               '_format' => $request->get('_format')
+           );
+
+           return $this->routeRedirectView('api_1_get_project', $routeOptions, $statusCode);
+
+       } catch (InvalidFormException $exception) {
+
+           return $exception->getForm();
+       }
+   }
+   
+   /**
     * Presents the form to use to create a new project.
     *
-    * #ApiDoc(
+    * @ApiDoc(
     *   resource = true,
     *   statusCodes = {
     *     200 = "Returned when successful"
@@ -105,6 +160,32 @@ class ProjectController extends FOSRestController
    public function newProjectAction()
    {
        return $this->createForm(new ProjectType());
+   }
+   
+   /**
+    * Presents the form to use to edit a new project.
+    *
+    * @ApiDoc(
+    *   resource = true,
+    *   statusCodes = {
+    *     200 = "Returned when successful"
+    *   }
+    * )
+    *
+    * @Annotations\View()
+    *
+    * @return FormTypeInterface
+    * 
+    * @throws NotFoundHttpException
+    */
+   public function editProjectAction($id)
+   {
+       $project = $this->getOr404($id);
+       
+       return $this->createForm(new ProjectType(), $project );/*, array(
+            'action' => $this->generateUrl('project_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));*/
    }
     
    /**

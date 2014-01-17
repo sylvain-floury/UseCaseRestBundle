@@ -55,6 +55,32 @@ class ProjectHandler implements ProjectHandlerInterface {
    }
 
    /**
+    * Edit a Project, or create if not exist.
+    *
+    * @param ProjectInterface $project
+    * @param array         $parameters
+    *
+    * @return ProjectInterface
+    */
+   public function put(ProjectInterface $project, array $parameters)
+   {
+       return $this->processForm($project, $parameters, 'PUT');
+   }
+
+   /**
+    * Partially update a Project.
+    *
+    * @param ProjectInterface $project
+    * @param array         $parameters
+    *
+    * @return ProjectInterface
+    */
+   public function patch(ProjectInterface $project, array $parameters)
+   {
+       return $this->processForm($project, $parameters, 'PATCH');
+   }
+   
+   /**
     * Processes the form.
     *
     * @param ProjectInterface $project
@@ -68,7 +94,8 @@ class ProjectHandler implements ProjectHandlerInterface {
    private function processForm(ProjectInterface $project, array $parameters, $method = "PUT")
    {
        $form = $this->formFactory->create(new ProjectType(), $project, array('method' => $method));
-       $form->submit($parameters, 'PATCH' !== $method);
+       // pb sur le parameters
+       $form->submit($parameters['flosy_bundle_usecaserestbundle_project'], 'PATCH' !== $method);
        if ($form->isValid()) {
 
            $project = $form->getData();
