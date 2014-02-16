@@ -33,6 +33,7 @@ Dependencies
 ```bash
 php composer.phar require "friendsofsymfony/rest-bundle" "@dev"
 php composer.phar require "jms/serializer-bundle" "@dev"
+php composer.phar require "nelmio/api-doc-bundle" "@dev"
 ```
 
 ```php
@@ -41,6 +42,7 @@ $bundles = array(
     //..
     new FOS\RestBundle\FOSRestBundle(),
     new JMS\SerializerBundle\JMSSerializerBundle(),
+    new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
 ```
 
 https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/3-listener-support.md
